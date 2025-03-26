@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  app-test:
+    build:
+      context: ../.
+      dockerfile: Dockerfile.test
+    restart: no
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - ../.env_test
+    ports:
+      - "${PORT}:${PORT}"
+
+  mysql:
+    image: mysql:8
+    restart: always
+    env_file:
+      - ../.env_test
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:6
+    restart: always
+    env_file:
+      - ../.env_test
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: [ "redis-server", "--requirepass", "${REDIS_PASSWORD}" ]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrations:
+    image: migrate/migrate
+    env_file:
+      - ../.env_test
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ../migrations:/migrations
+    command: [ "-path", "/migrations", "-database", "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(mysql:3306)/insider_test", "up" ]
+    restart: "no"
+
+volumes:
+  mysql_data:
