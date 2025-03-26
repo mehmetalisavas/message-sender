@@ -134,6 +134,9 @@ The system is designed to be scalable and efficient, leveraging goroutines for c
 - Concurrency: Uses goroutines to send messages asynchronously without blocking execution.
 
 - Custom Scheduler: Instead of relying on external cron packages, a native Go timer schedules tasks every two minutes.
+Scheduler is designed as an extendible, Plus producer & consumer parts are introduced for single responsibility purpose. 
+**Producers** will fetch required data from DB and send it to Consumer via channels.
+**Consumers** will consume from related channels and process messages.
 
 - Data Integrity: Ensures messages are sent only once by updating the database after sending.
 
