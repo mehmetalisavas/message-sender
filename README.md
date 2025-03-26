@@ -156,4 +156,5 @@ The system is designed to be scalable and efficient, leveraging goroutines for c
 - Tracing & Logging: Implement distributed tracing for better observability.
 - Prometheus Integration: Add metrics and monitoring using Prometheus.
 - Unit & Integration Tests: Extend test coverage for better reliability.
+- CI/CD Pipeline: Implement automated testing, linting, deployment, and monitoring through CI/CD tools like GitHub Actions or Jenkins.
 
