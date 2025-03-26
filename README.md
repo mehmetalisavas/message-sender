@@ -104,18 +104,30 @@ The system is designed to be scalable and efficient, leveraging goroutines for c
 
 ### High-Level Architecture
 
-       API SERVER
-   ----------------
-   |  (CronJob)   |  -- Start/Stop flag
-   |  System      |  -- Fetch messages from DB
-   |  Scheduler   |  -- Send messages asynchronously
-   |              |  -- Consume messages asynchronously
-   ----------------
-         |---> Remote Call (Notification Service)
-         |---> Database (Stores messages)
-         |---> Redis (Caches sent message IDs)
+##### API SERVER
 
+**Crobjob**
+**(System Scheduler)**
 
+| -- Start/Stop flag
+
+| -- Fetch messages from DB
+
+| -- Send messages asynchronously
+
+| -- Consume messages asynchronously
+
+  
+**App Connections**
+
+|---> Remote Call (Notification Service)
+
+|---> Database (Stores messages)
+
+|---> Redis (Caches sent message IDs)
+  
+  
+  
 
 ## Key Design Decisions
 
