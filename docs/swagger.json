@@ -1,0 +1,123 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Message Sender API",
+        "version": "1.0",
+        "description": "This API allows you to send and manage messages.",
+        "contact": {}
+    },
+    "paths": {
+        "/messages": {
+            "get": {
+                "description": "Get a list of sent messages with optional pagination parameters (limit, offset, page)",
+                "summary": "List sent messages",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit of messages to return",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset for pagination",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of sent messages",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Message"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/process_message": {
+            "get": {
+                "description": "Start or stop the message processing based on the command (start/stop)",
+                "summary": "Update message processing state",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Command: start or stop",
+                        "name": "command",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message processing started or stopped",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Command is required or invalid command",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Message": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "recipient": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.MessageStatus"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.MessageStatus": {
+            "type": "string",
+            "enum": [
+                "pending",
+                "processing",
+                "sent",
+                "failed"
+            ],
+            "x-enum-varnames": [
+                "MessageStatusPending",
+                "MessageStatusProcessing",
+                "MessageStatusSent",
+                "MessageStatusFailed"
+            ]
+        }
+    }
+}

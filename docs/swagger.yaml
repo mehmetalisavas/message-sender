@@ -1,0 +1,83 @@
+definitions:
+  models.Message:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      recipient:
+        type: string
+      status:
+        $ref: '#/definitions/models.MessageStatus'
+      updated_at:
+        type: string
+    type: object
+  models.MessageStatus:
+    enum:
+    - pending
+    - processing
+    - sent
+    - failed
+    type: string
+    x-enum-varnames:
+    - MessageStatusPending
+    - MessageStatusProcessing
+    - MessageStatusSent
+    - MessageStatusFailed
+info:
+  title: Message Sender API
+  version: "1.0"
+  description: This API allows you to send and manage messages, providing functionality to list messages and control message processing.
+  contact: {}
+paths:
+  /messages:
+    get:
+      description: Get a list of sent messages with optional pagination parameters
+        (limit, offset, page)
+      parameters:
+      - description: Limit of messages to return
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      responses:
+        "200":
+          description: List of sent messages
+          schema:
+            items:
+              $ref: '#/definitions/models.Message'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: List sent messages
+  /process_message:
+    get:
+      description: Start or stop the message processing based on the command (start/stop)
+      parameters:
+      - description: 'Command: start or stop'
+        in: query
+        name: command
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Message processing started or stopped
+          schema:
+            type: string
+        "400":
+          description: Command is required or invalid command
+          schema:
+            type: string
+      summary: Update message processing state
+swagger: "2.0"
