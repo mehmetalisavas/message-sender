@@ -32,6 +32,7 @@ func NewRedisCacheStore(ctx context.Context, cfg config.Config) (*RedisCacheStor
 	return &RedisCacheStore{client: rdb}, nil
 }
 
+// CacheMessage caches the message ID and send time
 func (r *RedisCacheStore) CacheMessage(ctx context.Context, messageId string, sendTime time.Time) error {
 	if messageId == "" {
 		return ErrEmptyMessageID
@@ -43,6 +44,7 @@ func (r *RedisCacheStore) CacheMessage(ctx context.Context, messageId string, se
 	return r.client.Set(ctx, key, value, 0).Err()
 }
 
+// GetMessageValue returns the send time of the message with the given ID
 func (r *RedisCacheStore) GetMessageValue(ctx context.Context, messageId string) (time.Time, error) {
 	key := fmt.Sprintf("message:%s", messageId)
 	value, err := r.client.Get(ctx, key).Result()

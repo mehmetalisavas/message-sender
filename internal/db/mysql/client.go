@@ -9,6 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// NewClient initializes a new MySQL client
 func NewClient(cfg config.Config) (*sql.DB, error) {
 	db, err := sql.Open("mysql", dsn(cfg))
 	if err != nil {

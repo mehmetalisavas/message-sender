@@ -19,6 +19,7 @@ type MessageConsumer struct {
 	cacheService        service.CacheStore
 }
 
+// NewMessageConsumer creates a new MessageConsumer instance.
 func NewMessageConsumer(storageService service.Storage, messageBus *MessageBus, notificationService notification.NotificationSender, cacheService service.CacheStore) *MessageConsumer {
 	return &MessageConsumer{
 		storageService:      storageService,
@@ -28,6 +29,7 @@ func NewMessageConsumer(storageService service.Storage, messageBus *MessageBus, 
 	}
 }
 
+// Consume consumes messages from the message bus.
 func (mc *MessageConsumer) Consume(ctx context.Context, workerCount int) error {
 	messageChannel, exists := mc.messageBus.GetChannel(MessageSenderTopic)
 	if !exists {

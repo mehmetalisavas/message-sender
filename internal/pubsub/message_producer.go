@@ -25,6 +25,7 @@ type MessageProducer struct {
 	intervalInSec int
 }
 
+// NewMessageProducer creates a new MessageProducer instance.
 func NewMessageProducer(cfg *config.Config, storageService service.Storage, messageBus *MessageBus, interval int) *MessageProducer {
 	return &MessageProducer{
 		cfg:            cfg,
@@ -34,6 +35,7 @@ func NewMessageProducer(cfg *config.Config, storageService service.Storage, mess
 	}
 }
 
+// Produce produces messages to the message queue.
 func (mp *MessageProducer) Produce(ctx context.Context) error {
 	ticker := time.NewTicker(time.Duration(mp.intervalInSec) * time.Second)
 	defer ticker.Stop()

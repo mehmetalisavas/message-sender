@@ -11,6 +11,7 @@ const (
 	MessageStatusFailed     MessageStatus = "failed"
 )
 
+// Message represents a message entity.
 type Message struct {
 	ID        int           `json:"id"`
 	Recipient string        `json:"recipient"`

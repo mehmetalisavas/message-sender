@@ -42,6 +42,7 @@ type NotificationResponse struct {
 	MessageID string `json:"messageId"`
 }
 
+// Send sends a notification to the notification service
 func (ns *NotificationService) Send(ctx context.Context, recipient, content string) (*NotificationResponse, error) {
 	payload := NotificationRequest{
 		To:      recipient,

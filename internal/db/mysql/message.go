@@ -8,6 +8,7 @@ import (
 	"github.com/mehmetalisavas/message-sender/internal/models"
 )
 
+// ListSentMessages returns all sent messages according to given options.
 func (s *SqlStore) ListSentMessages(ctx context.Context, opts models.ListOptions) ([]models.Message, error) {
 	options := models.InitWithDefaultListOptions(opts)
 
@@ -39,70 +40,7 @@ func (s *SqlStore) ListSentMessages(ctx context.Context, opts models.ListOptions
 }
 
 // GetPendingMessages returns pending messages from the storage in a given limit.
-// func (s *SqlStore) GetPendingMessages(ctx context.Context, limit int) ([]models.Message, error) {
-// 	query := `
-// 		SELECT id, content, recipient, status, created_at, updated_at
-// 		FROM messages
-// 		WHERE status = ?
-// 		ORDER BY created_at ASC
-// 		LIMIT ?
-// 	`
-
-// 	rows, err := s.db.QueryContext(ctx, query, models.MessageStatusPending, limit)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer rows.Close()
-
-// 	// initialize the slice with a length of 0 and a capacity of limit for better performance
-// 	messages := make([]models.Message, 0, limit)
-// 	for rows.Next() {
-// 		var m models.Message
-// 		if err := rows.Scan(&m.ID, &m.Content, &m.Recipient, &m.Status, &m.CreatedAt, &m.UpdatedAt); err != nil {
-// 			return nil, err
-// 		}
-// 		messages = append(messages, m)
-// 	}
-
-// 	return messages, nil
-// }
-
-// func (s *SqlStore) GetPendingMessages(ctx context.Context, limit int) ([]models.Message, error) {
-// 	query := `
-// 		UPDATE messages
-// 		SET status = 'processing', updated_at = NOW()
-// 		WHERE id IN (
-// 			SELECT id
-// 			FROM messages
-// 			WHERE (status = 'pending' OR (status = 'processing' AND updated_at < NOW() - INTERVAL 5 MINUTE))
-// 			ORDER BY created_at ASC
-// 			LIMIT ?
-// 			FOR UPDATE SKIP LOCKED
-// 		)
-// 		RETURNING id, content, recipient, status, created_at, updated_at
-// 	`
-
-// 	rows, err := s.db.QueryContext(ctx, query, limit)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer rows.Close()
-
-// 	// initialize the slice with a length of 0 and a capacity of limit for better performance
-// 	messages := make([]models.Message, 0, limit)
-// 	for rows.Next() {
-// 		var m models.Message
-// 		if err := rows.Scan(&m.ID, &m.Content, &m.Recipient, &m.Status, &m.CreatedAt, &m.UpdatedAt); err != nil {
-// 			return nil, err
-// 		}
-// 		messages = append(messages, m)
-// 	}
-
-// 	return messages, nil
-// }
-
 func (s *SqlStore) GetPendingMessages(ctx context.Context, limit int) ([]models.Message, error) {
-	// Start a transaction
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return nil, err
@@ -125,7 +63,6 @@ func (s *SqlStore) GetPendingMessages(ctx context.Context, limit int) ([]models.
 	}
 	defer rows.Close()
 
-	// Initialize a slice to hold the messages
 	messages := make([]models.Message, 0, limit)
 	for rows.Next() {
 		var m models.Message

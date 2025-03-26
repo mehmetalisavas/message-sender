@@ -19,6 +19,7 @@ type Schedule struct {
 	wg             sync.WaitGroup
 }
 
+// NewScheduler creates a new Schedule instance.
 func NewScheduler(storageService service.Storage) *Schedule {
 	bus := pubsub.NewMessageBus()
 	bus.RegisterChannel(pubsub.MessageSenderTopic, 2)

@@ -14,6 +14,7 @@ var DefaultConfig = Config{
 	BackoffFactor:  2,
 }
 
+// Config represents the configuration for the retry mechanism.
 type Config struct {
 	MaxRetries     int
 	InitialBackoff time.Duration
@@ -21,6 +22,7 @@ type Config struct {
 	BackoffFactor  int
 }
 
+// Retry retries the given function until it succeeds or the context is canceled.
 func Retry(ctx context.Context, fn func() (*http.Response, error), config Config) (*http.Response, error) {
 	var finalErr error
 	backoff := config.InitialBackoff

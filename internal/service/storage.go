@@ -11,6 +11,7 @@ import (
 // Make sure SqlStore implements Storage interface.
 var _ Storage = (*mysql.SqlStore)(nil)
 
+// Storage represents the storage service.
 type Storage interface {
 	// ListSentMessages returns all sent messages according to given options.
 	ListSentMessages(ctx context.Context, opts models.ListOptions) ([]models.Message, error)
@@ -22,6 +23,7 @@ type Storage interface {
 	UpdateMessageStatus(ctx context.Context, id int, status models.MessageStatus) error
 }
 
+// CacheStore represents the cache store service.
 type CacheStore interface {
 	CacheMessage(ctx context.Context, messageId string, sendTime time.Time) error
 }
